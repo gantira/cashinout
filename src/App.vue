@@ -1,9 +1,16 @@
 <template>
+  <navbar />
+  <div class="mt-8"></div>
   <router-view />
 </template>
 
 <script>
-export default {};
+import Navbar from "./components/Navbar.vue";
+export default {
+  components: {
+    Navbar,
+  },
+};
 </script>
 
 <style>
