@@ -1,15 +1,103 @@
 <template>
   <div class="container">
-      Register
+    <div class="w-full lg:w-1/3">
+      <div class="border rounded-lg overflow-hidden">
+        <div class="bg-gray-50 py-4 px-4 border-b border-gray-200">
+          Register
+        </div>
+        <div class="p-4">
+          <form @submit.prevent="register">
+            <div class="mb-5">
+              <label for="name" class="text-xs uppercase font-medium block mb-2"
+                >Name</label
+              >
+              <input
+                v-model="form.name"
+                type="text"
+                name="name"
+                id="name"
+                class="w-full border rounded-lg focus:outline-none focus:ring focus:border-blue-400 h-10 px-4 transition duration-150"
+              />
+            </div>
+            <div class="mb-5">
+              <label
+                for="email"
+                class="text-xs uppercase font-medium block mb-2"
+                >Email</label
+              >
+              <input
+                v-model="form.email"
+                type="email"
+                name="email"
+                id="email"
+                class="w-full border rounded-lg focus:outline-none focus:ring focus:border-blue-400 h-10 px-4 transition duration-150"
+              />
+            </div>
+            <div class="mb-5">
+              <label
+                for="password"
+                class="text-xs uppercase font-medium block mb-2"
+                >password</label
+              >
+              <input
+                v-model="form.password"
+                type="password"
+                name="password"
+                id="password"
+                class="w-full border rounded-lg focus:outline-none focus:ring focus:border-blue-400 h-10 px-4 transition duration-150"
+              />
+            </div>
+            <div class="mb-5">
+              <label
+                for="password_confirmation"
+                class="text-xs uppercase font-medium block mb-2"
+                >Confirm Password</label
+              >
+              <input
+                v-model="form.password_confirmation"
+                type="password"
+                name="password_confirmation"
+                id="password_confirmation"
+                class="w-full border rounded-lg focus:outline-none focus:ring focus:border-blue-400 h-10 px-4 transition duration-150"
+              />
+            </div>
+            <button
+              class="px-4 h-10 rounded-lg focus:ring focus:border-blue-300 bg-blue-500 hover:bg-blue-600 text-white"
+            >
+              Register
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-export default {
+import axios from "axios";
+import { reactive } from "vue";
+import router from "@/router";
+import store from "@/store";
 
-}
+export default {
+  setup() {
+    const form = reactive({
+      name: "",
+      email: "",
+      password: "",
+      password_confirmation: "",
+    });
+
+    const register = async () => {
+      await axios.post("register", form);
+      await store.dispatch("auth/me");
+      router.replace("/");
+    };
+
+    return { form, register };
+  },
+};
 </script>
 
 <style>
-
 </style>
