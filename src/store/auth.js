@@ -20,13 +20,21 @@ export default {
         SET_AUTHENTICATED(state, value) { state.authenticated = value },
         SET_USER(state, value) { state.user = value },
     },
-    
+
     actions: {
         async login({ dispatch }, credentials) {
             await axios.get("sanctum/csrf-cookie")
             await axios.post("login", credentials)
             dispatch('me')
         },
+
+        async logout({ commit }) {
+            await axios.post('logout')
+            
+            commit('SET_AUTHENTICATED', false)
+            commit('SET_USER', null)
+        },
+
         async me({ commit }) {
             try {
                 let response = await axios.get('api/me')

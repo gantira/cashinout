@@ -51,7 +51,7 @@
         </div>
         <div class="flex items-center" v-if="authenticated">
           <router-link :class="className" to="/login">{{ user.name }}</router-link>
-          <router-link :class="className" to="/register">Logout</router-link>
+          <button :class="className" class="focus:outline-none" @click="logout">Logout</button>
         </div>
         <div class="flex flex-col lg:flex-row lg:items-center" v-else>
           <router-link :class="className" to="/login">Login</router-link>
@@ -74,7 +74,10 @@ export default {
     const authenticated = computed(() => store.getters["auth/authenticated"]);
     const user = computed(() => store.getters["auth/user"]);
 
-    return { className, isOn, authenticated, user };
+    const logout = async () => {
+        store.dispatch('auth/logout')
+    }
+    return { className, isOn, authenticated, user, logout };
   },
 };
 </script>
