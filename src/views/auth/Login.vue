@@ -39,7 +39,6 @@
               Login
             </button>
           </form>
-          {{ credential }}
         </div>
       </div>
     </div>
@@ -47,7 +46,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import store from "@/store";
+import router from "@/router";
 import { reactive } from "vue";
 
 export default {
@@ -58,11 +58,8 @@ export default {
     });
 
     const login = async () => {
-      await axios.get("sanctum/csrf-cookie");
-      await axios.post("login", credential);
-
-      let response = await axios.get("api/me");
-      console.log(response.data);
+      await store.dispatch("auth/login", credential)
+      router.replace('/')
     };
 
     return { login, credential };

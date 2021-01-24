@@ -4,7 +4,11 @@
       <div
         class="flex justify-between items-center border-b lg:border-b-0 py-4 lg:py-0 px-6 lg:pr-0"
       >
-        <router-link exact-active-class="bg-transparent" class="font-semibold uppercase" to="/">
+        <router-link
+          exact-active-class="bg-transparent"
+          class="font-semibold uppercase"
+          to="/"
+        >
           Cashinout
         </router-link>
 
@@ -44,11 +48,11 @@
         <div class="flex flex-col lg:flex-row lg:items-center">
           <router-link :class="className" to="/about">About</router-link>
         </div>
-        <!-- <div class="flex items-center">
-          <router-link :class="className" to="/login">Angga</router-link>
+        <div class="flex items-center" v-if="authenticated">
+          <router-link :class="className" to="/login">{{ user.name }}</router-link>
           <router-link :class="className" to="/register">Logout</router-link>
-        </div> -->
-        <div class="flex flex-col lg:flex-row lg:items-center">
+        </div>
+        <div class="flex flex-col lg:flex-row lg:items-center" v-else>
           <router-link :class="className" to="/login">Login</router-link>
           <router-link :class="className" to="/register">Register</router-link>
         </div>
@@ -58,13 +62,20 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { computed, ref } from "vue";
+import store from "@/store";
+
 export default {
   setup() {
     const className = "px-4 py-2";
     const isOn = ref(false);
 
-    return { className, isOn };
+    const authenticated = computed(() => store.getters["auth/authenticated"]);
+    const user = computed(() => store.getters["auth/user"]);
+
+    console.log(store.getters["auth/authenticated"]);
+
+    return { className, isOn, authenticated, user };
   },
 };
 </script>
