@@ -47,6 +47,7 @@
       >
         <div class="flex flex-col lg:flex-row lg:items-center">
           <router-link :class="className" to="/about">About</router-link>
+          <router-link :class="className" to="/cashes">Cash</router-link>
         </div>
         <div class="flex items-center" v-if="authenticated">
           <router-link :class="className" to="/login">{{ user.name }}</router-link>
@@ -72,8 +73,6 @@ export default {
 
     const authenticated = computed(() => store.getters["auth/authenticated"]);
     const user = computed(() => store.getters["auth/user"]);
-
-    console.log(store.getters["auth/authenticated"]);
 
     return { className, isOn, authenticated, user };
   },
