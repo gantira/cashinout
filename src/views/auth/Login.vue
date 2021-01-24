@@ -18,6 +18,9 @@
                 id="email"
                 class="w-full border rounded-lg focus:outline-none focus:ring focus:border-blue-400 h-10 px-4 transition duration-150"
               />
+              <div class="text-red-500 mt-2 text-sm" v-if="errors['email']">
+                {{ errors["email"][0] }}
+              </div>
             </div>
             <div class="mb-5">
               <label
@@ -32,6 +35,9 @@
                 id="password"
                 class="w-full border rounded-lg focus:outline-none focus:ring focus:border-blue-400 h-10 px-4 transition duration-150"
               />
+              <div class="text-red-500 mt-2 text-sm" v-if="errors['password']">
+                {{ errors["password"][0] }}
+              </div>
             </div>
             <button
               class="px-4 h-10 rounded-lg focus:ring focus:border-blue-300 bg-blue-500 hover:bg-blue-600 text-white"
@@ -48,21 +54,27 @@
 <script>
 import store from "@/store";
 import router from "@/router";
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 
 export default {
   setup() {
+    const errors = ref([]);
+
     const credential = reactive({
       email: "",
       password: "",
     });
 
     const login = async () => {
-      await store.dispatch("auth/login", credential)
-      router.replace('/')
+      try {
+        await store.dispatch("auth/login", credential);
+        router.replace("/");
+      } catch (error) {
+        errors.value = error.response.data.errors;
+      }
     };
 
-    return { login, credential };
+    return { login, credential, errors };
   },
 };
 </script>

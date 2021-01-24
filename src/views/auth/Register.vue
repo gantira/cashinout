@@ -18,6 +18,9 @@
                 id="name"
                 class="w-full border rounded-lg focus:outline-none focus:ring focus:border-blue-400 h-10 px-4 transition duration-150"
               />
+              <div class="text-red-500 mt-2 text-sm" v-if="errors['name']">
+                {{ errors["name"][0] }}
+              </div>
             </div>
             <div class="mb-5">
               <label
@@ -32,6 +35,9 @@
                 id="email"
                 class="w-full border rounded-lg focus:outline-none focus:ring focus:border-blue-400 h-10 px-4 transition duration-150"
               />
+              <div class="text-red-500 mt-2 text-sm" v-if="errors['email']">
+                {{ errors["email"][0] }}
+              </div>
             </div>
             <div class="mb-5">
               <label
@@ -46,6 +52,9 @@
                 id="password"
                 class="w-full border rounded-lg focus:outline-none focus:ring focus:border-blue-400 h-10 px-4 transition duration-150"
               />
+              <div class="text-red-500 mt-2 text-sm" v-if="errors['password']">
+                {{ errors["password"][0] }}
+              </div>
             </div>
             <div class="mb-5">
               <label
@@ -75,12 +84,14 @@
 
 <script>
 import axios from "axios";
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import router from "@/router";
 import store from "@/store";
 
 export default {
   setup() {
+    const errors = ref([]);
+
     const form = reactive({
       name: "",
       email: "",
@@ -89,12 +100,16 @@ export default {
     });
 
     const register = async () => {
-      await axios.post("register", form);
-      await store.dispatch("auth/me");
-      router.replace("/");
+      try {
+        await axios.post("register", form);
+        await store.dispatch("auth/me");
+        router.replace("/");
+      } catch (error) {
+        errors.value = error.response.data.errors;
+      }
     };
 
-    return { form, register };
+    return { form, register, errors };
   },
 };
 </script>
