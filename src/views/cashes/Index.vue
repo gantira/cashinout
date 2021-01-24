@@ -11,7 +11,7 @@
                 class="block uppercase text-xs text-blue-100 fonsemi tracking-wider mb-2"
                 >balances</label
               >
-              <div class="text-3xl font-semibold">Rp 1000.000</div>
+              <div class="text-3xl font-semibold">Rp {{ state.balances }}</div>
             </div>
           </div>
         </div>
@@ -25,7 +25,7 @@
                   class="block uppercase text-xs text-blue-100 fonsemi tracking-wider mb-2"
                   >debit</label
                 >
-                <div class="text-3xl font-semibold">Rp 1000.000</div>
+                <div class="text-3xl font-semibold">Rp {{ state.debit }}</div>
               </div>
             </div>
           </div>
@@ -38,36 +38,36 @@
                   class="block uppercase text-xs text-blue-100 fonsemi tracking-wider mb-2"
                   >credit</label
                 >
-                <div class="text-3xl font-semibold">Rp 1000.000</div>
+                <div class="text-3xl font-semibold">Rp {{ state.credit }}</div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="mt-10">
+        <div class="my-10">
           <div class="border rounded-lg overflow-hidden">
             <div class="border-b px-6 py-4 bg-gray-50">Transaction</div>
-            <div class="px-6 py-4">
-              <a
-                href="#"
-                class="flex justify-between items-center hover:bg-gray-50 p-4 rounded-lg hover:shadow mb-2"
+            <div class="h-112 overflow-y-scroll">
+              <template
+                v-for="transaction in state.transactions"
+                :key="transaction.id"
               >
-                <span class="flex flex-col">
-                  <span class="text-100 text-xs">20 Nov 2020 15.33</span>
-                  <span>Gaji Bulan November</span>
-                </span>
-                <span class="text-green-500">500.000</span>
-              </a>
-              <a
-                href="#"
-                class="flex justify-between items-center hover:bg-gray-50 p-4 rounded-lg hover:shadow"
-              >
-                <span class="flex flex-col">
-                  <span class="text-gray-500 text-xs">20 Nov 2020 15.33</span>
-                  <span>Beli Smartphone</span>
-                </span>
-                <span class="text-red-500">100.000</span>
-              </a>
+                <a
+                  href="#"
+                  class="px-6 py-5 flex justify-between items-center border-b hover:bg-gray-100"
+                >
+                  <span class="flex flex-col">
+                    <span class="text-100 text-xs">{{ transaction.when }}</span>
+                    <span>{{ transaction.name }}</span>
+                  </span>
+                  <span
+                    :class="
+                      transaction.isCredit ? 'text-red-500' : 'text-green-500'
+                    "
+                    >{{ transaction.amount }}</span
+                  >
+                </a>
+              </template>
             </div>
           </div>
         </div>
@@ -77,7 +77,25 @@
 </template>
 
 <script>
-export default {};
+import { onMounted, ref } from "vue";
+import axios from "axios";
+
+export default {
+  setup() {
+    const state = ref([]);
+
+    const getCashes = async () => {
+      let { data } = await axios.get("api/cash");
+      state.value = data;
+    };
+
+    onMounted(() => {
+      getCashes();
+    });
+
+    return { getCashes, state };
+  },
+};
 </script>
 
 <style>
