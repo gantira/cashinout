@@ -22,7 +22,7 @@
                 class="bg-gradient-to-br from-teal-500 to-cyan-400 text-white p-6 transform rotate-3 rounded-2xl"
               >
                 <label
-                  class="block uppercase text-xs text-blue-100 fonsemi tracking-wider mb-2"
+                  class="block uppercase text-xs text-teal-100 fonsemi tracking-wider mb-2"
                   >debit</label
                 >
                 <div class="text-3xl font-semibold">Rp {{ state.debit }}</div>
@@ -35,7 +35,7 @@
                 class="bg-gradient-to-br from-red-500 to-yellow-400 text-white p-6 transform rotate-3 rounded-2xl"
               >
                 <label
-                  class="block uppercase text-xs text-blue-100 fonsemi tracking-wider mb-2"
+                  class="block uppercase text-xs text-red-100 fonsemi tracking-wider mb-2"
                   >credit</label
                 >
                 <div class="text-3xl font-semibold">Rp {{ state.credit }}</div>
@@ -52,8 +52,8 @@
                 v-for="transaction in state.transactions"
                 :key="transaction.id"
               >
-                <a
-                  href="#"
+                <router-link
+                :to="`/cashes/${transaction.slug}`"
                   class="px-6 py-5 flex justify-between items-center border-b hover:bg-gray-100"
                 >
                   <span class="flex flex-col">
@@ -66,7 +66,7 @@
                     "
                     >{{ transaction.amount }}</span
                   >
-                </a>
+                </router-link>
               </template>
             </div>
           </div>

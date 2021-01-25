@@ -19,6 +19,12 @@ const routes = [
         meta: { auth: true }
     },
     {
+        path: '/cashes/:slug',
+        name: 'cashes.show',
+        component: () => import(/* webpackChunkName: "cashes" */ '../views/cashes/Show.vue'),
+        meta: { auth: true }
+    },
+    {
         path: '/login',
         name: 'login',
         component: () => import(/* webpackChunkName: "about" */ '../views/auth/Login.vue'),
