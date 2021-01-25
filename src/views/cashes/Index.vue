@@ -46,14 +46,37 @@
 
         <div class="my-10">
           <div class="border rounded-lg overflow-hidden">
-            <div class="border-b px-6 py-4 bg-gray-50">Transaction</div>
+            <div
+              class="border-b px-6 py-4 bg-gray-50 flex items-center justify-between"
+            >
+              <div>Transaction</div>
+              <form @submit.prevent="getCashes" class="flex items-center">
+                <input
+                  v-model="form.begin"
+                  type="date"
+                  class="bg-white rounded px-3 py-2 border"
+                />
+
+                <input
+                  v-model="form.to"
+                  type="date"
+                  class="bg-white rounded px-3 py-2 border mx-2"
+                />
+
+                <input
+                  type="Submit"
+                  value="Go"
+                  class="px-3 py-2 rounded bg-gradient-to-br from-blue-500 to-light-blue-500 text-white focus:outline-none"
+                />
+              </form>
+            </div>
             <div class="h-112 overflow-y-scroll">
               <template
                 v-for="transaction in state.transactions"
                 :key="transaction.id"
               >
                 <router-link
-                :to="`/cashes/${transaction.slug}`"
+                  :to="`/cashes/${transaction.slug}`"
                   class="px-6 py-5 flex justify-between items-center border-b hover:bg-gray-100"
                 >
                   <span class="flex flex-col">
@@ -77,23 +100,35 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import axios from "axios";
 
 export default {
   setup() {
     const state = ref([]);
 
+    const form = reactive({
+      begin: "",
+      to: "",
+    });
+
     const getCashes = async () => {
-      let { data } = await axios.get("api/cash");
+      let { data } = await axios.get("api/cash", {
+        params: {
+          from: form.begin,
+          to: form.to,
+        },
+      });
       state.value = data;
+      form.begin = data.firstOfMonth;
+      form.to = data.now;
     };
 
     onMounted(() => {
       getCashes();
     });
 
-    return { getCashes, state };
+    return { state, form, getCashes };
   },
 };
 </script>
