@@ -10,19 +10,25 @@
             <label class="uppercase text-gray-500 tracking-wider text-xs"
               >Amount</label
             >
-            <div class="leading-relaxed text-gray-800">Rp {{ transaction.amount }}</div>
+            <div class="leading-relaxed text-gray-800">
+              Rp {{ transaction.amount }}
+            </div>
           </div>
           <div class="mb-4">
             <label class="uppercase text-gray-500 tracking-wider text-xs"
               >Stored</label
             >
-            <div class="leading-relaxed text-gray-800">Rp {{ transaction.when }}</div>
+            <div class="leading-relaxed text-gray-800">
+              Rp {{ transaction.when }}
+            </div>
           </div>
           <div class="mb-4">
             <label class="uppercase text-gray-500 tracking-wider text-xs"
               >Description</label
             >
-            <div class="leading-relaxed text-gray-800">{{ transaction.description }}</div>
+            <div class="leading-relaxed text-gray-800">
+              {{ transaction.description }}
+            </div>
           </div>
         </div>
       </div>
@@ -34,6 +40,7 @@
 import { useRoute } from "vue-router";
 import axios from "axios";
 import { onMounted, ref } from "vue";
+import router from '@/router'
 
 export default {
   setup() {
@@ -42,9 +49,12 @@ export default {
     let slug = route.params.slug;
 
     const getTransaction = async () => {
-      let { data } = await axios.get(`/api/cash/${slug}`);
-      transaction.value = data.data;
-      console.log(data.data);
+      try {
+        let { data } = await axios.get(`/api/cash/${slug}`);
+        transaction.value = data.data;
+      } catch (error) {
+          router.replace('/cashes');
+      }
     };
 
     onMounted(() => {

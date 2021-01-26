@@ -119,9 +119,9 @@
               id="name"
               class="w-full border rounded-lg focus:outline-none focus:ring focus:border-blue-400 h-10 px-4 transition duration-150"
             />
-            <!-- <div class="text-red-500 mt-2 text-sm" v-if="errors['name']">
+            <div class="text-red-500 mt-2 text-sm" v-if="errors['name']">
               {{ errors["name"][0] }}
-            </div> -->
+            </div>
           </div>
           <div class="mb-5">
             <label for="amount" class="text-xs uppercase font-medium block mb-2"
@@ -134,9 +134,9 @@
               id="amount"
               class="w-full border rounded-lg focus:outline-none focus:ring focus:border-blue-400 h-10 px-4 transition duration-150"
             />
-            <!-- <div class="text-red-500 mt-2 text-sm" v-if="errors['amount']">
+            <div class="text-red-500 mt-2 text-sm" v-if="errors['amount']">
               {{ errors["amount"][0] }}
-            </div> -->
+            </div>
           </div>
           <div class="mb-5">
             <label for="when" class="text-xs uppercase font-medium block mb-2"
@@ -149,9 +149,9 @@
               id="when"
               class="w-full border rounded-lg focus:outline-none focus:ring focus:border-blue-400 h-10 px-4 transition duration-150"
             />
-            <!-- <div class="text-red-500 mt-2 text-sm" v-if="errors['when']">
+            <div class="text-red-500 mt-2 text-sm" v-if="errors['when']">
               {{ errors["when"][0] }}
-            </div> -->
+            </div>
           </div>
           <div class="mb-5">
             <label for="when" class="text-xs uppercase font-medium block mb-2"
@@ -163,9 +163,9 @@
               id="description"
               class="w-full border rounded-lg focus:outline-none focus:ring focus:border-blue-400 py-4 px-4 transition duration-150"
             ></textarea>
-            <!-- <div class="text-red-500 mt-2 text-sm" v-if="errors['description']">
+            <div class="text-red-500 mt-2 text-sm" v-if="errors['description']">
               {{ errors["description"][0] }}
-            </div> -->
+            </div>
           </div>
 
           <button
@@ -186,6 +186,7 @@ import axios from "axios";
 export default {
   setup() {
     const state = ref([]);
+    const errors = ref([]);
 
     const form = reactive({
       begin: "",
@@ -210,15 +211,24 @@ export default {
     };
 
     const add = async () => {
-      let response = await axios.post("api/cash/create", form);
-      state.value.transactions.unshift(response.data.cash);
+      try {
+        let response = await axios.post("api/cash/create", form);
+        state.value.transactions.unshift(response.data.cash);
+
+        form.name = "";
+        form.amount = "";
+        form.when = "";
+        form.description = "";
+      } catch (error) {
+        errors.value = error.response.data.errors;
+      }
     };
 
     onMounted(() => {
       getCashes();
     });
 
-    return { state, form, getCashes, add };
+    return { state, form, getCashes, add, errors };
   },
 };
 </script>
